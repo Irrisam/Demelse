@@ -1,0 +1,2 @@
+demarrer backend local : uvicorn main:app --reload --port 8000
+checker si tout est up grace au swagger : http://localhost:8000/docs

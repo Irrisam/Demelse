@@ -1,0 +1,53 @@
+steps:
+  # Decrypt file
+  - name: 'gcr.io/cloud-builders/gcloud'
+    args:
+      - kms
+      - decrypt
+      - --ciphertext-file=app/.env.${_ENV_}.enc
+      - --plaintext-file=app/.env
+      - --location=europe-west3
+      - --keyring=Medelse
+      - --key=encrypt-parameter
+
+  - name: 'gcr.io/cloud-builders/gcloud'
+    args:
+      - kms
+      - decrypt
+      - --ciphertext-file=app/recommender_google_creds.json.enc
+      - --plaintext-file=app/recommender_google_creds.json
+      - --location=europe-west3
+      - --keyring=Medelse
+      - --key=encrypt-parameter
+
+  # Build the container image
+  - name: 'gcr.io/cloud-builders/docker'
+    args:
+      - build
+      - -t
+      - eu.gcr.io/$PROJECT_ID/${_SERVICE_NAME}
+      - -f
+      - Dockerfile
+      - .
+
+  # Push the container image
+  - name: 'gcr.io/cloud-builders/docker'
+    args:
+      - push
+      - eu.gcr.io/$PROJECT_ID/${_SERVICE_NAME}
+
+  # Deploy container image to Cloud Run
+  - name: 'gcr.io/cloud-builders/gcloud'
+    args:
+      - beta
+      - run
+      - deploy
+      - ${_SERVICE_NAME}
+      - --image
+      - eu.gcr.io/$PROJECT_ID/${_SERVICE_NAME}
+      - --region
+      - europe-west3
+      - --platform
+      - managed
+      - --quiet
+timeout: 1000s

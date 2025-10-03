@@ -1,0 +1,13 @@
+{
+  "type": "service_account",
+  "project_id": "medelse-180512",
+  "private_key_id": "7bf0f54c47388032dc4317bdc3f6945124bf79d9",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQC/M1yiAqwRHPP3\nbPemcp6AipotKRetNPlNq99UzBrWgN3Fhne+TWAzThWoCrwvzN+KN2aokDna5qXe\nuYdo6R+phnB1dIoenc6IzH5Uv15IAQ/rY5v/3zlt5DZ8yNM4gUY1kcMo/+FMJNWF\nF5YvkV57B7/6TJlhIEM2t90KDTN6pvlc+7u8ljhOMH2UxhvrOLjUmn5Pb4G18rN4\nAJNIj9QLvkMiAWdhQK43AFsXRvecKYBv3GVqLnZ5+B2EZfTzmZRpj0tw8P8fzum2\nRgW94776dMJjnIzuJr6NznUM4dTdBWZrB0EuswvGb4c8I2/BWUWbGsJFzXhJtEC3\noU2Z/l5dAgMBAAECggEACw7+8BXketboW2qvhi6B8WBS24LRbkCunKnwsFhfwwFQ\nEmEdIuIZys3c3cvFJ6SbV0SuCNjSp9EITfIAHXbCUI1IitqTNIMfE3V0ZxVscBCz\nqYMo3is8iJkW96+r28xKUcXc+k2Wa8+Dk/+Rva2UP9xqY6Ezi9UQXiVTQQYTcKgH\nD8X7xs4JIbyASZc2mQc8+GCRm/B8VBeszskruzYH1/0dAvX4xYrPIuzhucVUdjdH\nbxh37KVEQ2IS7at3wajA17fyjuUdleuk2ItCds+9ffaDse6dhJeUcBzo5gp/2IQI\n3LofrOj6UVkNfMhPQGXDI0HmEvqYWjXKYOVj64NTFwKBgQDk4KvODrPCUg4aNsyg\nj33WtC2tv4umCjFCY5zFs7sSHYOPB3wy7vjLyT7C/zS6tKf0DJvn5Hpwb/HjezjI\nZI7CrveX76fGAIcufSYmou1GVB7Oq2anZCn1QMjJne1F1YaPAZIx6OSeS1nI6y5R\nshPBL3fa9b0NQzXYcUW7qa1odwKBgQDV27SfhOb01dTr2owGZrdFKYo6ZHULjLAx\nU73C88VSUu4mZ8i593V1x3pu9BqYySG8lYGYSwjBV/krxN6ZdDqz+wmM4mSTuJME\ndGGeVRCWdCe2TEx9wQYSF9AlRiLLrT1wmkD+uUjkHyzred1xfOrYmrUVHHztloqG\nNwrXeZG4ywKBgD7S4LXF2Ve8eDx/0Dk+SddWS7eGfUmNQKotd4nY5L97NHJdJp1A\ndTBSxBR4QrwA/J0DnQPQ9j7Iq4e6egKff4Q2zKV61f2GhZSgK4mtbR3B11b5O0s1\nNkMojjSxUcC6dJ3qW3uxppdArZt12pf4Hm4HnomOrF7olO4dYXu6fmvPAoGBAMQg\nTMLquICbRjzS3g3Uz4jfMsSgcnMYIFHskaAjvbflFEEmdwCNwCw2t8LfnTC3bHgt\nyH8peSsPihUo5FhpLpj2xehti32qDTJNpWT2cFL6zZyy1oeRqQaYziwQ6UJPa4RE\nAw1YUU/cg26lAX/d5uak4yMsUCn4IKw7+HZqKEkHAoGAaGbEx3Mqk/V66kKVlcEh\nK8slHDqDAz3ZJAYUFyng7IT5Cw5uuXIl/Z+EFgGcnpyQWfojttAHewVuPvm5V+t4\nc1L+Kpgs4qtBUuoSNWBQKOZuIC1d/69Sf1j8Q0txbsE3jguqxzi3M7HFlIUNb470\n4l/bNrmKblZ7ugZ4pC+a+5A=\n-----END PRIVATE KEY-----\n",
+  "client_email": "admin-storage-recommender@medelse-180512.iam.gserviceaccount.com",
+  "client_id": "106172186704136646909",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/admin-storage-recommender%40medelse-180512.iam.gserviceaccount.com",
+  "universe_domain": "googleapis.com"
+}

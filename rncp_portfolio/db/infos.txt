@@ -1,0 +1,52 @@
+pour start pg : psql medelse
+
+
+🔹 PostgreSQL psql Cheat Sheet
+Connexion
+psql -h <host> -U <user> -d <database> -p <port>
+# ex: psql -h localhost -U postgres -d medelse -p 5432
+
+Bases
+\l             -- lister toutes les bases
+\c <database>  -- se connecter à une autre base
+
+Schémas
+\dn            -- lister tous les schémas
+SET search_path TO medelse;  -- utiliser un schéma particulier
+
+Tables
+\dt [<schema>.<table>]  -- lister les tables (optionnel : filtrer par schéma)
+\d <table>              -- voir la structure/colonnes d’une table
+
+Données
+SELECT * FROM <table> LIMIT 10;   -- voir les 10 premières lignes
+SELECT COUNT(*) FROM <table>;     -- nombre de lignes
+
+Création et modification
+CREATE DATABASE ma_base;
+CREATE SCHEMA medelse;
+CREATE TABLE medelse.user (
+    id SERIAL PRIMARY KEY,
+    name TEXT
+);
+
+INSERT INTO medelse.user (name) VALUES ('Alice');
+UPDATE medelse.user SET name='Bob' WHERE id=1;
+DELETE FROM medelse.user WHERE id=2;
+DROP TABLE medelse.user;
+
+Informations du schéma
+-- Lister toutes les tables d’un schéma
+SELECT table_name
+FROM information_schema.tables
+WHERE table_schema='medelse';
+
+-- Lister colonnes et types d’une table
+SELECT column_name, data_type
+FROM information_schema.columns
+WHERE table_name='user';
+
+Autres commandes utiles
+\?            -- aide générale psql
+\q            -- quitter psql
+\conninfo     -- info sur la connexion actuelle

@@ -1,0 +1,43 @@
+image: medelse/docker:v3
+
+options:
+  docker: true
+
+definitions:
+  services:
+    docker:
+      memory: 3072
+  steps:
+    - step: &deploy
+        name: "Deploy"
+        image: google/cloud-sdk:latest
+        script:
+          - echo ${KEY_FILE_AUTH} | base64 --decode --ignore-garbage > /tmp/gcloud-api.json
+          - gcloud auth activate-service-account --key-file /tmp/gcloud-api.json
+          - gcloud config set project ${GOOGLE_CLOUD_PROJECT_ID}
+          - gcloud builds submit --substitutions=_SERVICE_NAME="${GOOGLE_CLOUD_RUN_SERVICE_NAME}",_ENV_="${DOCKERFILE_ENV}"
+        caches:
+          - docker
+
+pipelines:
+  branches:
+    main:
+      - step:
+          name: 'init deployment'
+          script:
+            - echo 'Ready to deploy'
+      - step:
+          <<: *deploy
+          name: staging deployment
+          deployment: staging
+          trigger: manual
+    stable:
+      - step:
+          name: 'init deployment'
+          script:
+            - echo 'Ready to deploy'
+      - step:
+          <<: *deploy
+          name: production deployment
+          deployment: production
+          trigger: manual

@@ -1,0 +1,3 @@
+#!include:.gitignore
+!app/.env
+!app/recommender_google_creds.json
