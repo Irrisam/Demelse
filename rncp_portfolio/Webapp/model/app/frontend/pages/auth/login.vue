@@ -31,6 +31,10 @@
 <script setup lang="ts">
 console.log("login.vue chargé !")
 
+// definePageMeta({
+//   layout: "empty"
+// })
+
 const { request, token } = useApi()
 
 const email = ref<string>("")

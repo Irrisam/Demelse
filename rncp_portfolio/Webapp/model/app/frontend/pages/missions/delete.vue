@@ -1,6 +1,6 @@
 <template>
   <div class="mission-view">
-    <h1>Voir une mission</h1>
+    <h1>Supprimer une mission</h1>
 
     <div class="input-section">
       <input
@@ -25,7 +25,11 @@
       <p><strong>Heures de travail :</strong> {{ mission.hours }} h</p>
       <p><strong>Rémunération :</strong> {{ mission.pay }} €</p>
       <p><strong>Rôle :</strong> {{ mission.role }}</p>
+
+       <button class="delete-btn" @click="confirmDelete">Supprimer cette mission</button>
+       
     </div>
+     <p v-if="successMessage" class="success">{{ successMessage }}</p>
   </div>
 </template>
 
@@ -37,10 +41,11 @@ const missionId = ref<string>("")
 const mission = ref<any>(null)
 const error = ref<string | null>(null)
 const pending = ref<boolean>(false)
+const successMessage = ref<string | null>(null)
 
 async function fetchMission() {
   if (!missionId.value) {
-    error.value = "Veuillez entrer un ID valide."
+    error.value = "ID introuvable."
     return
   }
   try {
@@ -55,6 +60,8 @@ async function fetchMission() {
   pending.value = true
   error.value = null
   mission.value = null
+  successMessage.value = null
+  
 
   try {
     const data = await request(`/missions/view/${missionId.value}`, {
@@ -65,6 +72,27 @@ async function fetchMission() {
     error.value = err?.message || "Erreur lors du chargement."
   } finally {
     pending.value = false
+  }
+}
+
+async function confirmDelete() {
+  if (!mission.value) return
+
+  const confirmed = window.confirm(
+    `Voulez-vous vraiment supprimer la mission #${mission.value.id} ?`
+  )
+
+  if (!confirmed) return
+
+  try {
+    await request(`/missions/delete/${mission.value.id}`, {
+      method: "DELETE",
+    })
+
+    successMessage.value = `Mission #${mission.value.id} supprimée avec succès ✅`
+    mission.value = null
+  } catch (err: any) {
+    error.value = err?.message || "Erreur lors de la suppression."
   }
 }
 

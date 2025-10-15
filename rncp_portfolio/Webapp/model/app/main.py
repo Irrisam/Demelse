@@ -1,18 +1,21 @@
-from fastapi import FastAPI, HTTPException
-from fastapi.middleware.cors import CORSMiddleware
-from pydantic import BaseModel
-
+from calculators import mission_trios_selector
 from website.crud import create_mission, view_mission, delete_mission
+from fastapi import FastAPI
+from refresher import refresher
+from exceptions import IdError, RefreshingError
+from fs.errors import ResourceNotFound
 from website.pw import add_user
 from website.login import login
-from refresher import refresher
+from pydantic import BaseModel
+from fastapi.middleware.cors import CORSMiddleware
+
+# uvicorn main:app --reload --port 8000
 
 app = FastAPI()
 
-# ✅ Autoriser ton front (Nuxt)
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000", "*"],  # A restreindre en prod
+    allow_origins=["http://localhost:3000", "*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -86,23 +89,98 @@ def create_mission_route(body: MissionCreationRequest):
 
 
 @app.get("/missions/view/{mission_id}")
-def view_mission_route(body: MissionViewRequest):
-    id = view_mission(body.id)
-    return id
+def view_mission_route(mission_id: int):
+    mission = view_mission(mission_id)
+    if isinstance(mission, dict) and "error" in mission:
+        return mission
+    return {
+        "id": mission[0],
+        "office_id": mission[1],
+        "service_id": mission[2],
+        "created_at": mission[3],
+        "tags": mission[4],
+        "hours": mission[5],
+        "pay": mission[6],
+        "role": mission[7]
+    }
 
 
 @app.delete("/missions/delete/{mission_id}")
 def delete_mission_route(mission_id: int):
     return delete_mission(mission_id)
 
+# ********************************************************************************
+# MICROSERVICE AI
+
 
 @app.get("/refresher")
 def refresh():
     try:
         refresher()
-        return {"success": True, "message": "Training data refreshed"}
+        return {"Training datas refreshed"}
+    except RefreshingError as e:
+        return {e}
     except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+        return {f"Training datas refreshing failed:: {type(e)} - {str(e)}"}
+
+
+@app.get("/{user_id}")
+def run_with_id(user_id: str):
+    # outputs 30 best trios from users suggestions
+    if not user_id.isdigit():
+        return {"Please input a valid numeric user_id"}
+    try:
+        selected_trio, full_trios = mission_trios_selector(
+            int(user_id), 30, 0, dominant_category_check=False)
+        return full_trios
+    except ResourceNotFound:
+        return {"Training datas not found, please run the refresher first"}
+    except IdError as e:
+        return {str(e)}
+    except IndexError:
+        return {"ID not found for user_id(1):": str(user_id)}
+    except TypeError:
+        return {"ID not found for user_id:(2)": str(user_id)}
+    except Exception as e:
+        return {f"An error occured:: {str(e)}, {type(e)}"}
+
+
+@app.get("/{user_id}/{list_limit}")
+def run_with_id_list_limit(user_id: str, list_limit: str):
+    # outputs a list of trios from users suggestions up to the 'list_limit' limit
+    if not user_id.isdigit():
+        return {"Please input a valid numeric user_id"}
+    try:
+        selected_trio, full_trios = mission_trios_selector(
+            int(user_id), int(list_limit), 0, dominant_category_check=False)
+        return full_trios
+    except IdError:
+        return {"ID not found for user_id(0):": str(user_id)}
+    except IndexError:
+        return {"ID not found for user_id(1):": str(user_id)}
+    except TypeError:
+        return {"ID not found for user_id(2):": str(user_id)}
+    except Exception as e:
+        return {f"An error occured:: {str(e)}, {type(e)}"}
+
+
+@app.get("/{user_id}/{list_limit}/{trio_index}")
+def run_with_id_list_limit_index(user_id: str, list_limit: str, trio_index: str):
+    # outputs a single indexed trio from users suggestions within the 'list_limit' range
+    if not user_id.isdigit():
+        return {"Please input a valid numeric user_id"}
+    try:
+        selected_trio, full_trios = mission_trios_selector(int(user_id), int(
+            list_limit), int(trio_index), dominant_category_check=False)
+        return selected_trio
+    except IdError:
+        return {"ID not found for user_id(0):": str(user_id)}
+    except IndexError:
+        return {"ID not found for user_id(1):": str(user_id)}
+    except TypeError:
+        return {"ID not found for user_id(2):": str(user_id), 'with error:': str(e)}
+    except Exception as e:
+        return {f"An error occured:: {str(e)}, {type(e)}"}
 
 
 # 'tristan', 'duchamp', 'Clementine17', 'tristanduchamp@hotmail.fr'))

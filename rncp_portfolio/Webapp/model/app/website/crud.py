@@ -25,8 +25,8 @@ def view_mission(mission_id):
     '''
     cur.execute(query, (mission_id,))
     mission_view = cur.fetchone()
-    if mission_view is None:
-        return ('No mission to display, could not find matching id')
+    if not mission_view:
+        return {'No mission to display, could not find matching id'}
     return mission_view
 
 
