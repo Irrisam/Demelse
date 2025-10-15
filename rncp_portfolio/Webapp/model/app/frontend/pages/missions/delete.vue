@@ -1,40 +1,45 @@
 <template>
-  <div class="mission-view">
-    <h1>Supprimer une mission</h1>
+  <div class="flex justify-content-center align-items-center min-h-screen bg-gray-50">
+    <Card class="w-full md:w-8 lg:w-8 xl:w-7 2xl:w-6 shadow-2">
+      <template #title>
+        <h2 class="text-center">Supprimer une mission</h2>
+      </template>
 
-    <div class="input-section">
-      <input
-        v-model="missionId"
-        type="text"
-        placeholder="Entrez l'ID de la mission"
-      />
-      <button @click="fetchMission">Rechercher</button>
-    </div>
+      <template #content>
+        <form @submit.prevent="fetchMission" class="flex flex-column gap-3">
 
-    <p v-if="pending">Chargement...</p>
-    <p v-if="error" class="error">Erreur : {{ error }}</p>
+          <div class="field">
+            <label>ID de la mission</label>
+            <InputText v-model="missionId" type="text" placeholder="Entrez l'ID de la mission" />
+            <Button label="Rechercher" icon="pi pi-search" class="mt-2" @click="fetchMission" />
+          </div>
 
-    <div v-if="mission" class="mission-details">
-      <h2>Détails de la mission</h2>
+          <p v-if="pending">Chargement...</p>
+          <p v-if="error" class="text-red-500">❌ {{ error }}</p>
 
-      <p><strong>ID :</strong> {{ mission.id }}</p>
-      <p><strong>ID Établissement :</strong> {{ mission.office_id }}</p>
-      <p><strong>ID Service :</strong> {{ mission.service_id }}</p>
-      <p><strong>Créée le :</strong> {{ formatDate(mission.created_at) }}</p>
-      <p><strong>Tags :</strong> {{ mission.tags }}</p>
-      <p><strong>Heures de travail :</strong> {{ mission.hours }} h</p>
-      <p><strong>Rémunération :</strong> {{ mission.pay }} €</p>
-      <p><strong>Rôle :</strong> {{ mission.role }}</p>
+          <div v-if="mission" class="mt-4">
+            <h3 class="text-lg font-semibold mb-2">Détails de la mission</h3>
 
-       <button class="delete-btn" @click="confirmDelete">Supprimer cette mission</button>
-       
-    </div>
-     <p v-if="successMessage" class="success">{{ successMessage }}</p>
+            <p><strong>ID :</strong> {{ mission.id }}</p>
+            <p><strong>ID Établissement :</strong> {{ mission.office_id }}</p>
+            <p><strong>ID Service :</strong> {{ mission.service_id }}</p>
+            <p><strong>Créée le :</strong> {{ formatDate(mission.created_at) }}</p>
+            <p><strong>Tags :</strong> {{ mission.tags }}</p>
+            <p><strong>Heures de travail :</strong> {{ mission.hours }} h</p>
+            <p><strong>Rémunération :</strong> {{ mission.pay }} €</p>
+            <p><strong>Rôle :</strong> {{ mission.role }}</p>
+
+            <Button label="Supprimer cette mission" severity="danger" class="mt-3" @click="confirmDelete" />
+          </div>
+
+          <p v-if="successMessage" class="text-green-600 mt-3">✅ {{ successMessage }}</p>
+        </form>
+      </template>
+    </Card>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
 const { request } = useApi()
 
 const missionId = ref<string>("")
@@ -48,20 +53,11 @@ async function fetchMission() {
     error.value = "ID introuvable."
     return
   }
-  try {
-  const data = await request(`/missions/view/${missionId.value}`, {
-    method: "GET",
-  })
-  console.log("Mission récupérée :", data)
-  mission.value = data
-} catch (err: any) {
-  error.value = err?.message || "Erreur lors du chargement."
-}
+
   pending.value = true
   error.value = null
   mission.value = null
   successMessage.value = null
-  
 
   try {
     const data = await request(`/missions/view/${missionId.value}`, {
@@ -102,39 +98,3 @@ function formatDate(dateString: string) {
   return date.toLocaleString("fr-FR")
 }
 </script>
-
-<style scoped>
-.mission-view {
-  max-width: 500px;
-  margin: 50px auto;
-  padding: 20px;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-}
-
-.input-section {
-  display: flex;
-  gap: 10px;
-  margin-bottom: 20px;
-}
-
-input {
-  flex: 1;
-  padding: 8px;
-}
-
-button {
-  padding: 8px 12px;
-  cursor: pointer;
-}
-
-.error {
-  color: red;
-}
-
-.mission-details {
-  margin-top: 20px;
-  border-top: 1px solid #eee;
-  padding-top: 15px;
-}
-</style>

@@ -15,10 +15,9 @@
 </template>
 
 <script setup lang="ts">
-// Pas de logique spécifique ici pour le moment
 </script>
 
-<style scoped>
+<style>
 .navbar {
   display: flex;
   justify-content: space-between;

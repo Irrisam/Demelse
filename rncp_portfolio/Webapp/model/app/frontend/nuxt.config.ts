@@ -9,6 +9,9 @@ export default defineNuxtConfig({
 
   css: [
     'primeicons/primeicons.css',
+    'primeflex/primeflex.css',
+    '@/assets/css/global.css',
+    'primeicons/primeicons.css',
     'primeflex/primeflex.css'
   ],
 

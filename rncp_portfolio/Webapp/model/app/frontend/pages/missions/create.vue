@@ -1,21 +1,20 @@
 <template>
   <div class="flex justify-content-center align-items-center min-h-screen bg-gray-50">
-    <Card class="w-full md:w-6 lg:w-4 shadow-2">
++   <Card class="w-full md:w-8 lg:w-8 xl:w-7 2xl:w-6 shadow-2">
       <template #title>
-        <h2 class="text-center m-0">Créer une mission</h2>
+        <h2 class="text-center">Créer une mission</h2>
       </template>
 
       <template #content>
         <form @submit.prevent="handleCreation" class="flex flex-column gap-3">
 
           <div class="field">
-            <label>ID Établissement</label>
-            <InputText v-model.number="office_id" type="number" placeholder="Ex : 12" />
+            <label>ID Établissement </label>
+            <InputText v-model.number="office_id" type="number" placeholder=" Ex : 12" class="input-bordered" />
           </div>
-
           <div class="field">
             <label>ID du service</label>
-            <InputText v-model.number="service_id" type="number" placeholder="Ex : 3" />
+            <InputText v-model.number="service_id" type="number" placeholder=" Ex : 3" />
           </div>
 
           <div class="field">
@@ -54,9 +53,6 @@
 </template>
 
 <script setup lang="ts">
-import Card from 'primevue/card'
-import InputText from 'primevue/inputtext'
-import Button from 'primevue/button'
 
 const { request } = useApi()
 

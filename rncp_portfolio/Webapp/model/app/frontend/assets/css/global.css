@@ -1,0 +1,62 @@
+/* src/assets/styles/global.css */
+
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    width: 100%;
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.field {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    border: 1px solid #e5e7eb;
+    border-radius: 10px;
+    padding: 10px 14px;
+    background-color: #f9fafb;
+    transition: border-color 0.2s, box-shadow 0.2s, background-color 0.2s;
+    width: 100%;
+}
+
+.field:focus-within {
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.15);
+    background-color: #ffffff;
+}
+
+.field label {
+    font-weight: 600;
+    color: #1f2937;
+    width: 35%;
+    text-align: right;
+    font-size: 0.95rem;
+}
+
+.field input {
+    flex: 1;
+    border: 1px solid #cbd5e1;
+    border-radius: 6px;
+    padding: 8px 10px;
+    outline: none;
+    width: 100%;
+    background-color: white;
+}
+
+/* Empêche les sections internes de couvrir la navbar */
+.page-container {
+    position: relative;
+    z-index: 1;
+}
+
+/* Toute section pleine hauteur ne doit pas bloquer les clics de la navbar */
+.page-container>div[min-h-screen],
+.page-container>.min-h-screen {
+    min-height: calc(100vh - 70px);
+    /* enlève la hauteur de la navbar */
+    position: relative;
+    z-index: 1;
+}
