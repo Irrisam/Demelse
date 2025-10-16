@@ -13,7 +13,7 @@ form {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: 12px;
+    gap: 10px;
     border: 1px solid #e5e7eb;
     border-radius: 10px;
     padding: 10px 14px;
@@ -29,11 +29,13 @@ form {
 }
 
 .field label {
+    flex: 0 0 20%;
     font-weight: 600;
     color: #1f2937;
-    width: 35%;
+    width: 20%;
+    height: 10px;
     text-align: right;
-    font-size: 0.95rem;
+    font-size: 1rem;
 }
 
 .field input {
@@ -46,17 +48,8 @@ form {
     background-color: white;
 }
 
-/* Empêche les sections internes de couvrir la navbar */
-.page-container {
-    position: relative;
-    z-index: 1;
-}
-
-/* Toute section pleine hauteur ne doit pas bloquer les clics de la navbar */
-.page-container>div[min-h-screen],
-.page-container>.min-h-screen {
-    min-height: calc(100vh - 70px);
-    /* enlève la hauteur de la navbar */
-    position: relative;
-    z-index: 1;
+.field button {
+    font-weight: 600;
+    flex-shrink: 0;
+    margin-left: 8px;
 }

@@ -1,6 +1,6 @@
 from calculators import mission_trios_selector
 from website.crud import create_mission, view_mission, delete_mission
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
 from refresher import refresher
 from exceptions import IdError, RefreshingError
 from fs.errors import ResourceNotFound
@@ -40,12 +40,12 @@ class RegisterRequest(BaseModel):
 
 class MissionCreationRequest(BaseModel):
     office_id: int
-    service_id: int
+    service_name: str
+    specialty_name: str
     created_at: str
     tags: str
     hours: float
     pay: float
-    role: str
 
 
 class MissionViewRequest(BaseModel):
@@ -81,8 +81,8 @@ def logger(body: LoginRequest):
 @app.post("/missions/create")
 def create_mission_route(body: MissionCreationRequest):
     try:
-        id = create_mission(body.office_id, body.service_id,
-                            body.created_at, body.tags, body.hours, body.pay, body.role)
+        id = create_mission(body.office_id, body.service_name, body.specialty_name,
+                            body.created_at, body.tags, body.hours, body.pay)
         return {"success": True, "id": id}
     except Exception:
         raise HTTPException(status_code=401, detail="Invalid mission infos")
@@ -96,12 +96,12 @@ def view_mission_route(mission_id: int):
     return {
         "id": mission[0],
         "office_id": mission[1],
-        "service_id": mission[2],
-        "created_at": mission[3],
-        "tags": mission[4],
-        "hours": mission[5],
-        "pay": mission[6],
-        "role": mission[7]
+        "created_at": mission[2],
+        "tags": mission[3],
+        "hours": mission[4],
+        "pay": mission[5],
+        "service_name": mission[6],
+        "specialty_name": mission[7]
     }
 
 
@@ -132,6 +132,7 @@ def run_with_id(user_id: str):
     try:
         selected_trio, full_trios = mission_trios_selector(
             int(user_id), 30, 0, dominant_category_check=False)
+        full_trios = cast_to_int(full_trios)
         return full_trios
     except ResourceNotFound:
         return {"Training datas not found, please run the refresher first"}
@@ -153,6 +154,7 @@ def run_with_id_list_limit(user_id: str, list_limit: str):
     try:
         selected_trio, full_trios = mission_trios_selector(
             int(user_id), int(list_limit), 0, dominant_category_check=False)
+        full_trios = cast_to_int(full_trios)
         return full_trios
     except IdError:
         return {"ID not found for user_id(0):": str(user_id)}
@@ -172,6 +174,7 @@ def run_with_id_list_limit_index(user_id: str, list_limit: str, trio_index: str)
     try:
         selected_trio, full_trios = mission_trios_selector(int(user_id), int(
             list_limit), int(trio_index), dominant_category_check=False)
+        full_trios = cast_to_int(full_trios)
         return selected_trio
     except IdError:
         return {"ID not found for user_id(0):": str(user_id)}
@@ -182,5 +185,17 @@ def run_with_id_list_limit_index(user_id: str, list_limit: str, trio_index: str)
     except Exception as e:
         return {f"An error occured:: {str(e)}, {type(e)}"}
 
+
+def cast_to_int(x):
+    if isinstance(x, np.float64):
+        return int(x)
+    if isinstance(x, tuple):
+        return tuple(cast_to_int(i) for i in x)
+    if isinstance(x, list):
+        return [cast_to_int(i) for i in x]
+    return x
+
+
+# print(run_with_id_list_limit("100", "3"))
 
 # 'tristan', 'duchamp', 'Clementine17', 'tristanduchamp@hotmail.fr'))

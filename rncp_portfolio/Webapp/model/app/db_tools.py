@@ -3,8 +3,27 @@ import os
 import pandas as pd
 import psycopg2
 from psycopg2.extras import RealDictCursor
+import requests
 
 load_dotenv()
+
+
+# def search_missions():
+#     data = request.get_json()
+#     role = data.get('role')
+#     etablissement_id = data.get('etablissement_id')
+#     service_id = data.get('service_id')
+
+#     query = """
+#         SELECT * FROM missions
+#         WHERE role = %s
+#           AND id_etablissement = %s
+#           AND id_service = %s
+#     """
+#     cursor.execute(query, (role, etablissement_id, service_id))
+#     results = cursor.fetchall()
+
+#     return jsonify(results)
 
 
 def db_user_fetcher(user_id, data_type):
@@ -251,6 +270,15 @@ def db_user_fetcher(user_id, data_type):
             ms.user_id IS NOT NULL
             GROUP BY
             ms.user_id
+        """
+             },
+            {'MISSION_LOCATOR': """
+            SELECT
+                *
+            FROM
+                medelse.announcement
+            WHERE
+
         """
              },
         ]

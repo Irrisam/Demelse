@@ -4,16 +4,16 @@ conn = db_connector()
 cur = conn.cursor()
 
 
-def create_mission(office_id, service_id, created_at, tags, hours, pay, role):
+def create_mission(office_id, service_name, specialty_name, created_at, tags, hours, pay):
     query = '''
     INSERT INTO MEDELSE.ANNOUNCEMENT 
-        (office_id, service_id, created_at, tags, hours, pay, role) 
+        (office_id, service_name, specialty_name, created_at, tags, hours, pay) 
     VALUES
         (%s, %s, %s, %s, %s, %s, %s)
     RETURNING id;
     '''
-    cur.execute(query, (office_id, service_id,
-                created_at, tags, hours, pay, role))
+    cur.execute(query, (office_id, service_name, specialty_name,
+                created_at, tags, hours, pay))
     mission_id = cur.fetchone()[0]
     conn.commit()
     return mission_id
@@ -26,6 +26,7 @@ def view_mission(mission_id):
     cur.execute(query, (mission_id,))
     mission_view = cur.fetchone()
     if not mission_view:
+        print('No mission to display, could not find matching id')
         return {'No mission to display, could not find matching id'}
     return mission_view
 
