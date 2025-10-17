@@ -1,7 +1,7 @@
 <template>
   <div class="missions_index">
     <h1>Missions</h1>
-
+    
     <p v-if="error" style="color: red;">Erreur : {{ error }}</p>
 
     <nuxt-link to="/missions/view" class="mission-link">

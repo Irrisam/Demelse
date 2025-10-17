@@ -1,4 +1,4 @@
-from calculators import mission_trios_selector
+from calculators import mission_trios_selector, cast_to_int
 from website.crud import create_mission, view_mission, delete_mission
 from fastapi import FastAPI, HTTPException
 from refresher import refresher
@@ -184,16 +184,6 @@ def run_with_id_list_limit_index(user_id: str, list_limit: str, trio_index: str)
         return {"ID not found for user_id(2):": str(user_id), 'with error:': str(e)}
     except Exception as e:
         return {f"An error occured:: {str(e)}, {type(e)}"}
-
-
-def cast_to_int(x):
-    if isinstance(x, np.float64):
-        return int(x)
-    if isinstance(x, tuple):
-        return tuple(cast_to_int(i) for i in x)
-    if isinstance(x, list):
-        return [cast_to_int(i) for i in x]
-    return x
 
 
 # print(run_with_id_list_limit("100", "3"))

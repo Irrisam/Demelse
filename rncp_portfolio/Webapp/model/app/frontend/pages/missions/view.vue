@@ -1,36 +1,42 @@
 <template>
-  <div class="mission-view">
-    <h1>Voir une mission</h1>
+  <div class=" align-items-center min-h-screen bg-gray-50">
+    <Card class="w-full">
+      <template #title>
+        <h2 class="text-center">Voir une mission</h2>
+      </template>
 
-    <div class="input-section">
-      <input
-        v-model="missionId"
-        type="text"
-        placeholder="Entrez l'ID de la mission"
-      />
-      <button @click="fetchMission">Rechercher</button>
-    </div>
+      <template #content>
+        <form @submit.prevent="fetchMission" class="flex flex-column gap-3">
+          <div class="field">
+            <label>ID de la mission</label>
+            <InputText v-model="missionId" type="text" placeholder="Entrez l'ID de la mission" />
+            <Button label="Rechercher" icon="pi pi-search" @click="fetchMission" />
+          </div>
 
-    <p v-if="pending">Chargement...</p>
-    <p v-if="error" class="error">Erreur : {{ error }}</p>
+          <p v-if="pending">Chargement...</p>
+          <p v-if="error" class="text-red-500">❌ {{ error }}</p>
 
-    <div v-if="mission" class="mission-details">
-      <h2>Détails de la mission</h2>
+          <div v-if="mission" class="mt-4">
+            <h3 class="text-lg font-semibold mb-2">Détails de la mission</h3>
 
-      <p><strong>ID :</strong> {{ mission.id }}</p>
-      <p><strong>ID Établissement :</strong> {{ mission.office_id }}</p>
-      <p><strong>ID Service :</strong> {{ mission.service_id }}</p>
-      <p><strong>Créée le :</strong> {{ formatDate(mission.created_at) }}</p>
-      <p><strong>Tags :</strong> {{ mission.tags }}</p>
-      <p><strong>Heures de travail :</strong> {{ mission.hours }} h</p>
-      <p><strong>Rémunération :</strong> {{ mission.pay }} €</p>
-      <p><strong>Rôle :</strong> {{ mission.role }}</p>
-    </div>
+            <p><strong>ID :</strong> {{ mission.id }}</p>
+            <p><strong>ID Établissement :</strong> {{ mission.office_id }}</p>
+            <p><strong>Créée le :</strong> {{ formatDate(mission.created_at) }}</p>
+            <p><strong>Tags :</strong> {{ mission.tags }}</p>
+            <p><strong>Heures de travail :</strong> {{ mission.hours }} h</p>
+            <p><strong>Rémunération :</strong> {{ mission.pay }} €</p>
+            <p><strong>Service :</strong> {{ mission.service_name }}</p>
+            <p><strong>Spécialité :</strong> {{ mission.specialty_name }}</p>
+
+
+          </div>
+        </form>
+      </template>
+    </Card>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
 const { request } = useApi()
 
 const missionId = ref<string>("")
@@ -43,15 +49,7 @@ async function fetchMission() {
     error.value = "Veuillez entrer un ID valide."
     return
   }
-  try {
-  const data = await request(`/missions/view/${missionId.value}`, {
-    method: "GET",
-  })
-  console.log("Mission récupérée :", data)
-  mission.value = data
-} catch (err: any) {
-  error.value = err?.message || "Erreur lors du chargement."
-}
+
   pending.value = true
   error.value = null
   mission.value = null
@@ -74,39 +72,3 @@ function formatDate(dateString: string) {
   return date.toLocaleString("fr-FR")
 }
 </script>
-
-<style scoped>
-.mission-view {
-  max-width: 500px;
-  margin: 50px auto;
-  padding: 20px;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-}
-
-.input-section {
-  display: flex;
-  gap: 10px;
-  margin-bottom: 20px;
-}
-
-input {
-  flex: 1;
-  padding: 8px;
-}
-
-button {
-  padding: 8px 12px;
-  cursor: pointer;
-}
-
-.error {
-  color: red;
-}
-
-.mission-details {
-  margin-top: 20px;
-  border-top: 1px solid #eee;
-  padding-top: 15px;
-}
-</style>

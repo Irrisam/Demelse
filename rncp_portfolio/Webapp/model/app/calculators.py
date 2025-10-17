@@ -96,3 +96,13 @@ def mission_trios_selector(user_id, result_limit, trio_index, dominant_category_
     except IndexError:
         raise IndexError('Selected index out of range')
     return selected_trio, full_trios
+
+
+def cast_to_int(x):
+    if isinstance(x, np.float64):
+        return int(x)
+    if isinstance(x, tuple):
+        return tuple(cast_to_int(i) for i in x)
+    if isinstance(x, list):
+        return [cast_to_int(i) for i in x]
+    return x

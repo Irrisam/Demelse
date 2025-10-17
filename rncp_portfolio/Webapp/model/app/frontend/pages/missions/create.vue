@@ -1,6 +1,6 @@
 <template>
-  <div class="flex justify-content-center align-items-center min-h-screen bg-gray-50">
-+   <Card class="w-full md:w-8 lg:w-8 xl:w-7 2xl:w-6 shadow-2">
+  <div class="flex justify-content-center align-items-center min-h-screen">
++   <Card class="w-full">
       <template #title>
         <h2 class="text-center">Créer une mission</h2>
       </template>
@@ -13,8 +13,13 @@
             <InputText v-model.number="office_id" type="number" placeholder=" Ex : 12" class="input-bordered" />
           </div>
           <div class="field">
-            <label>ID du service</label>
-            <InputText v-model.number="service_id" type="number" placeholder=" Ex : 3" />
+            <label>Service</label>
+            <InputText v-model="service_name" placeholder=" Ex: Biology" />
+          </div>
+
+          <div class="field">
+            <label>Specialty</label>
+            <InputText v-model="specialty_name" placeholder=" Ex: Specialty" />
           </div>
 
           <div class="field">
@@ -29,17 +34,12 @@
 
           <div class="field">
             <label>Heures de travail</label>
-            <InputText v-model.number="hours" type="number" step="0.1" placeholder="Ex : 8.5" />
+            <InputText v-model.number="hours" type="number"  placeholder="Ex : 8.5" />
           </div>
 
           <div class="field">
             <label>Rémunération (€)</label>
-            <InputText v-model.number="pay" type="number" step="0.01" placeholder="Ex : 120.50" />
-          </div>
-
-          <div class="field">
-            <label>Rôle</label>
-            <InputText v-model="role" placeholder="Ex : Infirmier, Enseignant..." />
+            <InputText v-model.number="pay" type="number" placeholder="Ex : 120.50" />
           </div>
 
           <Button type="submit" label="Créer la mission" class="mt-3" />
@@ -57,9 +57,9 @@
 const { request } = useApi()
 
 const office_id = ref<number>()
-const service_id = ref<number>()
+const service_name = ref<string>("")
+const specialty_name = ref<string>("")
 const pay = ref<number>()
-const role = ref<string>("")
 const tags = ref<string>("")
 const hours = ref<number>()
 const created_at = ref<string>("")
@@ -73,14 +73,15 @@ const handleCreation = async () => {
   try {
     const data = await request("/missions/create", {
       method: "POST",
-      body: {office_id: office_id.value,
-      service_id: service_id.value,
-      pay: pay.value,
-      role: role.value,
-      tags: tags.value,
-      hours: hours.value,
-      created_at: created_at.value
-    }})
+      body: 
+        {office_id: office_id.value,
+        service_name: service_name.value,
+        specialty_name: specialty_name.value,
+        pay: pay.value,
+        tags: tags.value,
+        hours: hours.value,
+        created_at: created_at.value}
+      })
     response.value = data
   } catch (err) {
     error.value = "Erreur lors de la création de la mission"

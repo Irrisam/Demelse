@@ -35,27 +35,36 @@ console.log("login.vue chargé !")
 //   layout: "empty"
 // })
 
-const { request, token } = useApi()
-
 const email = ref<string>("")
 const password = ref<string>("")
 
 const error = ref<string | null>(null)
 const response = ref<unknown>(null)
 
-const handleLogin = async () => {
-  error.value = null
-  response.value = null
+const { request, token } = useApi()
+const { login } = useAuth()
 
+const handleLogin = async () => {
   try {
     const data = await request("/auth/login", {
       method: "POST",
-      body: { email: email.value, password: password.value }
+      body: {
+        email: email.value,
+        password: password.value,
+      },
     })
 
     response.value = data
 
-    token.value = data.access_token || null
+    const jwt = data?.access_token?.access_token
+
+   
+    if (jwt) {
+      login(jwt)
+      await navigateTo("/")
+    } else {
+      error.value = "Token manquant dans la réponse."
+    }
   } catch (err) {
     error.value = "Identifiants incorrects ou erreur réseau"
     console.error(err)

@@ -1,6 +1,6 @@
 <template>
-  <div class="flex justify-content-center align-items-center min-h-screen bg-gray-50">
-    <Card class="w-full md:w-8 lg:w-8 xl:w-7 2xl:w-6 shadow-2">
+  <div class=" align-items-center min-h-screen bg-gray-50">
+    <Card class="w-full">
       <template #title>
         <h2 class="text-center">Supprimer une mission</h2>
       </template>
@@ -11,7 +11,7 @@
           <div class="field">
             <label>ID de la mission</label>
             <InputText v-model="missionId" type="text" placeholder="Entrez l'ID de la mission" />
-            <Button label="Rechercher" icon="pi pi-search" class="mt-2" @click="fetchMission" />
+            <Button label="Rechercher" icon="pi pi-search" @click="fetchMission" />
           </div>
 
           <p v-if="pending">Chargement...</p>
@@ -22,12 +22,12 @@
 
             <p><strong>ID :</strong> {{ mission.id }}</p>
             <p><strong>ID Établissement :</strong> {{ mission.office_id }}</p>
-            <p><strong>ID Service :</strong> {{ mission.service_id }}</p>
+            <p><strong>Service :</strong> {{ mission.service_name }}</p>
+            <p><strong>Specialty :</strong> {{ mission.specialty_name }}</p>
             <p><strong>Créée le :</strong> {{ formatDate(mission.created_at) }}</p>
             <p><strong>Tags :</strong> {{ mission.tags }}</p>
             <p><strong>Heures de travail :</strong> {{ mission.hours }} h</p>
             <p><strong>Rémunération :</strong> {{ mission.pay }} €</p>
-            <p><strong>Rôle :</strong> {{ mission.role }}</p>
 
             <Button label="Supprimer cette mission" severity="danger" class="mt-3" @click="confirmDelete" />
           </div>

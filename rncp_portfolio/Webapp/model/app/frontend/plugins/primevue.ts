@@ -7,7 +7,13 @@ import Button from 'primevue/button'
 export default defineNuxtPlugin((nuxtApp) => {
     nuxtApp.vueApp.use(PrimeVue, {
         theme: {
-            preset: Aura
+            preset: Aura,
+            options: {
+                cssLayer: {
+                    name: 'primevue',
+                    order: 'tailwind-base, primevue, tailwind-utilities'
+                }
+            }
         }
     })
 
