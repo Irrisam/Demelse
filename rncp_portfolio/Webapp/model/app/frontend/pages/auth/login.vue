@@ -60,6 +60,7 @@ const handleLogin = async () => {
 
    
     if (jwt) {
+      localStorage.setItem('token', jwt) 
       login(jwt)
       await navigateTo("/")
     } else {

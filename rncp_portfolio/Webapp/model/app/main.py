@@ -1,6 +1,8 @@
 from calculators import mission_trios_selector, cast_to_int
 from website.crud import create_mission, view_mission, delete_mission
-from fastapi import FastAPI, HTTPException
+from website.login import get_user_id_from_token
+from fastapi import FastAPI, HTTPException, requests, Response, Request
+from website.db_tools import get_user_info
 from refresher import refresher
 from exceptions import IdError, RefreshingError
 from fs.errors import ResourceNotFound
@@ -108,6 +110,24 @@ def view_mission_route(mission_id: int):
 @app.delete("/missions/delete/{mission_id}")
 def delete_mission_route(mission_id: int):
     return delete_mission(mission_id)
+
+
+@app.post("/account/id_fetch")
+async def fetch_id_route(request: Request):
+    body = await request.json()
+    token = body.get("token")
+    return get_user_id_from_token(token)
+
+
+@app.post("/account/id_fetch/{token}")
+def get_user_infos_route(id: int):
+    return get_user_info(id)
+
+
+@app.post("/auth/logout")
+def logout(response: Response):
+    response.delete_cookie(key="token")
+    return {"message": "Déconnecté"}
 
 # ********************************************************************************
 # MICROSERVICE AI

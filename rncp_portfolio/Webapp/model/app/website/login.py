@@ -38,4 +38,12 @@ def login(email, password):
     return {"access_token": token}
 
 
+def get_user_id_from_token(token):
+    try:
+        decoded = jwt.decode(token, JWT_TOKEN, algorithms=["HS256"])
+        return decoded.get("user_id")
+    except jwt.ExpiredSignatureError:
+        return {"error": "Token expiré"}
+    except jwt.InvalidTokenError:
+        return {"error": "Token invalide"}
 # print(login('pipou@pipou.lol', 'coucoubebou'))

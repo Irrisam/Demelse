@@ -17,7 +17,7 @@ const { isLoggedIn } = useAuth()
       </template>
 
       <template v-else>
-        <li><NuxtLink to="/account">Mon compte</NuxtLink></li>
+        <li><NuxtLink to="/account/home">Mon compte</NuxtLink></li>
       </template>
     </ul>
   </nav>
