@@ -5,6 +5,7 @@ import os
 from dotenv import load_dotenv
 import pandas as pd
 
+
 def local_dev_data_fetcher():
     if os.getenv('GOOGLE_CLOUD_BUCKET_ADDRESS'):
         gcsfs = GCSFS(bucket_name=os.getenv('GOOGLE_CLOUD_BUCKET_ADDRESS'))
@@ -12,11 +13,14 @@ def local_dev_data_fetcher():
         copy_fs(gcsfs, local_fs)
     else:
         pass
+
+
 def fs_file_opener(dataset_path):
     fs = fs_opener()
     with fs.open(dataset_path, "rb") as file:
         dataset = pd.read_csv(file)
     return dataset
+
 
 def fs_opener():
     load_dotenv()

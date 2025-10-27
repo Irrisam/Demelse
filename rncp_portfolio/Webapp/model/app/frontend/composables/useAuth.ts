@@ -1,5 +1,5 @@
 export const useAuth = () => {
-    const token = useCookie < string | null > ('token', {
+    const token = useCookie<string | null>('token', {
         default: () => null,
         watch: true,
     })

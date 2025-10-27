@@ -2,8 +2,9 @@ from calculators import mission_trios_selector, cast_to_int
 from website.crud import create_mission, view_mission, delete_mission
 from website.login import get_user_id_from_token
 from fastapi import FastAPI, HTTPException, requests, Response, Request
-from website.db_tools import get_user_info
+from website.db_tools import get_user_info, update_user_info, get_pros_list, get_mission_list
 from refresher import refresher
+from website.utilitaries import normalize_model_output
 from exceptions import IdError, RefreshingError
 from fs.errors import ResourceNotFound
 from website.pw import add_user
@@ -33,6 +34,13 @@ class LoginRequest(BaseModel):
     password: str
 
 
+class UserUpdateRequest(BaseModel):
+    user_id: int
+    name: str
+    first_name: str
+    email: str
+
+
 class RegisterRequest(BaseModel):
     name: str
     first_name: str
@@ -50,8 +58,18 @@ class MissionCreationRequest(BaseModel):
     pay: float
 
 
+class UserInfoRequest(BaseModel):
+    userId: int
+
+
 class MissionViewRequest(BaseModel):
     id: int
+
+
+class ProIDRequest(BaseModel):
+    professional_id: int
+
+
 # --------------------------
 # ROUTES
 # --------------------------
@@ -119,15 +137,49 @@ async def fetch_id_route(request: Request):
     return get_user_id_from_token(token)
 
 
-@app.post("/account/id_fetch/{token}")
-def get_user_infos_route(id: int):
-    return get_user_info(id)
+@app.post("/account/user_info")
+def get_user_infos_route(body: UserInfoRequest):
+    return get_user_info(body.userId)
 
 
 @app.post("/auth/logout")
 def logout(response: Response):
     response.delete_cookie(key="token")
     return {"message": "Déconnecté"}
+
+
+@app.put("/auth/info_update")
+def update_user_info_route(body: UserUpdateRequest):
+    try:
+        update_user_info(body.user_id, body.name, body.first_name, body.email)
+        return {"success": True, "message": "User info updated"}
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
+
+
+@app.post("/datas/list/pros")
+def list_pros(body: UserInfoRequest):
+    return get_pros_list(body.userId)
+
+
+@app.post("/datas/list/missions")
+def list_missions(body: UserInfoRequest):
+    return get_mission_list(body.userId)
+
+
+@app.post("/algos/best_categories")
+def best_categories(body: ProIDRequest):
+    raw = run_with_id_list_limit(str(body.professional_id), "3")
+
+    if isinstance(raw, dict):
+        return {
+            "error": True,
+            "message": list(raw.keys())[0],
+            "detail": list(raw.values())[0]
+        }
+
+    return normalize_model_output(raw)
+
 
 # ********************************************************************************
 # MICROSERVICE AI
@@ -206,6 +258,6 @@ def run_with_id_list_limit_index(user_id: str, list_limit: str, trio_index: str)
         return {f"An error occured:: {str(e)}, {type(e)}"}
 
 
-# print(run_with_id_list_limit("100", "3"))
+print(run_with_id("90671"))
 
 # 'tristan', 'duchamp', 'Clementine17', 'tristanduchamp@hotmail.fr'))

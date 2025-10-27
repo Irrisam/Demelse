@@ -1,4 +1,17 @@
-/* src/assets/styles/global.css */
+/* assets/css/global.css */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap');
+
+:root {
+    --aura-font-family: 'Inter var', Inter, system-ui, sans-serif;
+    font-family: var(--aura-font-family);
+}
+
+body {
+    font-family: var(--aura-font-family);
+    background-color: #fff;
+    color: #111;
+}
 
 form {
     display: flex;
@@ -52,4 +65,57 @@ form {
     font-weight: 600;
     flex-shrink: 0;
     margin-left: 8px;
+}
+
+.user-infos-boxes {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    /* espace entre les lignes */
+    margin: 20px 0;
+}
+
+.user-infos-boxes input {
+    width: fit-content;
+    padding: 6px 10px;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    background: white;
+}
+
+.edit-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.pros-table {
+    width: fit-content;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+.pros-table th,
+.pros-table td {
+    border: 1px solid #e5e7eb;
+    padding: 10px 14px;
+    text-align: left;
+}
+
+.pros-table th {
+    background-color: #1f2937;
+    color: white;
+}
+
+.pros-table tr:nth-child(even) {
+    background-color: #f3f4f6;
+}
+
+.alert-error {
+    color: #b91c1c;
+    background: #fee2e2;
+    padding: 10px;
+    border-radius: 8px;
+    margin: 10px 0;
+    font-weight: bold;
 }

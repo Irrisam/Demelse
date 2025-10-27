@@ -17,7 +17,7 @@ def value_getter(user_id, data_type='full', dominant_category_check=False):
     score_values = []
     dominant_recommendation_scores = {'user_score': 0, 'content_score': 0}
     for recommendation_type in range(len(data_categories)):
-        dataset_path = 'trained_models_{}_{}_TRAINING.csv'.format(
+        dataset_path = '{}_{}_TRAINING.csv'.format(
             data_categories[recommendation_type][1], data_categories[recommendation_type][0])
         data_type_fetch = str(
             data_categories[recommendation_type][1]) + '_' + str(data_categories[recommendation_type][0])

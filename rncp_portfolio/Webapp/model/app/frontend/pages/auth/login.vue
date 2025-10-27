@@ -58,19 +58,20 @@ const handleLogin = async () => {
 
     const jwt = data?.access_token?.access_token
 
-   
     if (jwt) {
-      localStorage.setItem('token', jwt) 
+      localStorage.setItem('token', jwt)
       login(jwt)
-      await navigateTo("/")
+      await navigateTo("/account/home") // ✅ plus de blocage ici
     } else {
       error.value = "Token manquant dans la réponse."
     }
+
   } catch (err) {
     error.value = "Identifiants incorrects ou erreur réseau"
     console.error(err)
   }
 }
+
 </script>
 
 <style scoped>

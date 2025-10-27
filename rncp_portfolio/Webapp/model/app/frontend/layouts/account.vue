@@ -128,4 +128,12 @@ const closeSidebar = () => (isOpen.value = false)
 @media (min-width: 769px) {
   .drawer, .overlay, .hamburger { display: none !important; }
 }
+
+.user-infos-boxes {
+  margin-top: 20px;
+  padding: 15px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background-color: #fff;
+}
 </style>
