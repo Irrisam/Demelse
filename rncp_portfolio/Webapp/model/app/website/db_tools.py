@@ -60,7 +60,7 @@ def get_pros_list(user_id):
 
 def get_mission_list(user_id):
     query = """
-        SELECT id, office_id, created_at, tags, hours, pay, service_name, specialty_name
+        SELECT id, office_id, created_at, tags, hours, pay, service_name, specialty_name, service_id
         FROM medelse.announcement;
     """
 
@@ -77,6 +77,8 @@ def get_mission_list(user_id):
             "hours": m[4],
             "pay": m[5],
             "service_name": m[6],
-            "specialty_name": m[7]
+            "specialty_name": m[7],
+            "service_id": m[8]  # ✅ ajouté !
         })
+
     return mission_list

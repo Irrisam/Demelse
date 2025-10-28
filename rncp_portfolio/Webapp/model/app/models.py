@@ -29,26 +29,32 @@ def recommend(user_id, dataset_path, data_type):
             cosine_sim = cosine_similarity(data.iloc[:, 1:])
             print('Saving model')
             dump((data, cosine_sim), cache_path)
-
         user_data = db_user_fetcher(user_id, data_type)
+
         service_failsafe = [('urgences', 0.0), ('reanimation', 0.0), ('bloc_op', 0.0), ('medecine_interne', 0.0), ('biology', 0.0), ('unite_de_soin', 0.0),
                             ('ssr', 0.0), ('chirurgie', 0.0), ('endocrino', 0.0), ('medecine_specialite', 0.0), ('geriatrie', 0.0), ('medecine_generale', 0.0)]
         etab_failsafe = [('hea_cen', 0.0), ('hea_hou', 0.0), ('ssr', 0.0), ('had', 0.0), ('home_consult', 0.0), ('teleconsult', 0.0),
                          ('labo', 0.0), ('priv_comp', 0.0), ('ehpad_rh', 0.0), ('other_ms', 0.0), ('clinic', 0.0), ('hospi', 0.0)]
         rythme_failsafe = [('DAY', 0.0), ('NIGHT', 0.0), ]
         if user_data.empty:
+
             if data_type == 'USER_ETAB' or data_type == 'CONTENT_ETAB':
                 return (etab_failsafe)
             if data_type == 'USER_SERVICE' or data_type == 'CONTENT_SERVICE':
                 return (service_failsafe)
             if data_type == 'CONTENT_RYTHME':
                 return (rythme_failsafe)
-        idx_list = data.index[data['user_id'] == user_id].tolist()
 
+        idx_list = data.index[data['user_id'] == user_id].tolist()
+        print('la')
+        print(idx_list)
         if not idx_list:
             return {f"ID {user_id} was not found in the database or was written incorrectly (recommend)"}
+        print('pas la')
         idx = idx_list[0]
+
         user_choices = data.iloc[idx, 1:]
+
         available_missions = data.columns[1:]
 
         similar_users_idx = cosine_sim[idx].argsort()[::-1]
@@ -74,7 +80,6 @@ def recommend(user_id, dataset_path, data_type):
         if not mission_scores:
             print('No score to return')
             return None
-
         sorted_categories = sorted(
             mission_scores.items(), key=lambda x: x[1], reverse=True)
 

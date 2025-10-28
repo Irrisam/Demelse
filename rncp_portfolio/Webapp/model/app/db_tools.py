@@ -190,7 +190,7 @@ def db_user_fetcher(user_id, data_type):
             WHERE
             ms.user_id IS NOT NULL
             GROUP BY
-            ms.user_id
+            ms.user_id;
          """
              },
             {'CONTENT_SERVICE': """
@@ -216,7 +216,7 @@ def db_user_fetcher(user_id, data_type):
                 WHERE
                 a.created_at > '2023-01-01'
                 AND
-                ua.candidate_id = {user_id}
+                ua.candidate_id = 1001
             )
             SELECT
             ms.user_id,
@@ -237,7 +237,7 @@ def db_user_fetcher(user_id, data_type):
             WHERE
             ms.user_id IS NOT NULL
             GROUP BY
-            ms.user_id
+            ms.user_id;
          """
              },
             {'CONTENT_RYTHME': """
@@ -258,7 +258,7 @@ def db_user_fetcher(user_id, data_type):
                 WHERE
                 a.created_at > '2023-01-01'
                 AND ua.read_at is not NULL
-                AND ua.candidate_id = {user_id}
+                AND ua.candidate_id = 1001
             )
             SELECT
             ms.user_id,
@@ -269,7 +269,7 @@ def db_user_fetcher(user_id, data_type):
             WHERE
             ms.user_id IS NOT NULL
             GROUP BY
-            ms.user_id
+            ms.user_id;
         """
              },
             {'MISSION_LOCATOR': """
