@@ -7,6 +7,11 @@
       <li><NuxtLink to="/account/pros">Pros</NuxtLink></li>
       <li><NuxtLink to="/account/missions">Missions</NuxtLink></li>
       </template>
+
+      <template v-if="auth.isAdmin.value === false">
+      <li><NuxtLink to="/pros/missions">Liste des missions</NuxtLink></li>
+      <li><NuxtLink to="/pros/missions_suggested">Missions suggérées par IA</NuxtLink></li>
+      </template>
     </ul>
   </nav>
 </template>

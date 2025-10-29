@@ -2,6 +2,7 @@ import bcrypt
 import jwt
 import datetime
 from website.utilitaries import db_connector
+from website.web_db_tools import get_current_user
 import os
 
 JWT_TOKEN = os.getenv("JWT_SECRET", "fallback-secret")
@@ -19,6 +20,7 @@ def verify_password(password, hashed_pw):
 def create_jwt_token(user_id):
     payload = {
         "user_id": user_id,
+        "is_admin": get_current_user(user_id),
         "exp": datetime.datetime.now() + datetime.timedelta(hours=1)
     }
     token = jwt.encode(payload, JWT_TOKEN, algorithm="HS256")

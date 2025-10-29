@@ -8,17 +8,17 @@ const auth = useAuth()
 
     <ul class="nav-links">
       <template v-if="auth.isLoggedIn.value === false">
-        <li><NuxtLink to="/auth/login">Se connecter</NuxtLink></li>
+        <li><NuxtLink to="/auth/login">Me connecter</NuxtLink></li>
         <li><NuxtLink to="/auth/register">Créer un compte</NuxtLink></li>
       </template>
-      
+
       <template v-if="auth.isLoggedIn.value === true"> 
               <li><NuxtLink to="/account/home">Mon compte</NuxtLink></li>
-              <li><NuxtLink to="/auth/logout">Se déconnecter</NuxtLink></li>
+              <li><NuxtLink to="/auth/logout">Me déconnecter</NuxtLink></li>
       </template>
 
       <template v-if="auth.isLoggedIn.value && auth.isAdmin.value === false">
-        <li><NuxtLink to="/missions/create">Créer une mission</NuxtLink></li>
+        <li><NuxtLink to="/pros/missions">Mes missions</NuxtLink></li>
       </template>
 
       <template v-if="auth.isAdmin.value === true && auth.isLoggedIn.value === true">

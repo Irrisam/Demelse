@@ -32,7 +32,7 @@
     <p v-if="!loading && pros.length === 0">Aucun professionnel trouvé 🙁</p>
     <p v-if="error" style="color:red">{{ error }}</p>
 
-    <!-- ✅ MODAL -->
+    <!-- MODAL -->
     <div v-if="showModal" class="modal-overlay" @click="closeModal">
       <div class="modal" @click.stop>
         <h3>Catégories recommandées</h3>
@@ -40,9 +40,11 @@
         <p v-if="loadingModel">Analyse en cours...</p>
 
         <p v-else-if="errorModel" class="alert-error">
-          ⚠️ {{ errorModel }}
+          {{ errorModel }}
         </p>
-
+          <p v-else-if="errorModel" class="no-results">
+            {{ errorModel }}
+          </p>
         <div v-else-if="selectedCategories.length">
           <div
             v-for="(item, i) in selectedCategories"
@@ -99,7 +101,7 @@ import { useUserIdFromToken } from '@/composables/useUserIdFromToken'
 const { request } = useApi()
 const { userId, fetchUserId } = useUserIdFromToken()
 
-const pros = ref<any[]>([])
+const pros = ref<any[]>([]) 
 const loading = ref(true)
 const error = ref<string | null>(null)
 
@@ -174,7 +176,7 @@ async function fetchRecommendedMissions(reco: any) {
       Object.keys(establishmentIdMap).includes(c.name.toLowerCase())
     )
 
-    console.log("🎯 Filtrage basé sur :", {
+    console.log("Filtrage basé sur :", {
       service: service?.name,
       rythme: rythme?.name,
       etab: etab?.name
@@ -194,7 +196,6 @@ async function fetchRecommendedMissions(reco: any) {
       return serviceMatch && rythmeMatch && etabMatch
     }
 
-    // 🔥 Priorité 1 → Full match
     recommendedMissions.value = response.filter((m: any) => match(m, true, true, true))
 
     if (recommendedMissions.value.length === 0) {
@@ -220,14 +221,23 @@ async function fetchRecommendedMissions(reco: any) {
 
 
 async function loadPros() {
+  loading.value = true
+  error.value = null
+
   try {
     const response = await request('/datas/list/pros', {
       method: 'POST',
-      body: { userId: userId.value }
+      body: { userId: userId.value },
     })
-    pros.value = response
-  } catch {
+
+    // ✅ sécurité : si l’API renvoie null ou autre
+    pros.value = Array.isArray(response) ? response : []
+    console.log("📨 Réponse API pros :", pros.value)
+
+  } catch (err) {
+    console.error(err)
     error.value = "Erreur lors de la récupération des professionnels"
+    pros.value = [] // sécurité
   } finally {
     loading.value = false
   }
@@ -247,15 +257,23 @@ async function runModelFor(proId: number) {
       body: { professional_id: proId }
     })
 
-    selectedCategories.value = result
     console.log("✅ Résultats modèle :", result)
 
-  } catch {
-    errorModel.value = "Erreur interne"
+    if (!result || !Array.isArray(result) || result.length === 0) {
+      errorModel.value = "Aucune mission suggérée pour ce professionnel pour le moment"
+      return
+    }
+
+    selectedCategories.value = result
+
+  } catch (err) {
+    console.error("❌ Erreur lors du calcul du modèle :", err)
+    errorModel.value = "Erreur interne lors de l’analyse."
   } finally {
     loadingModel.value = false
   }
 }
+
 
 function closeModal() {
   showModal.value = false

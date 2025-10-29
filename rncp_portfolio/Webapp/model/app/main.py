@@ -2,7 +2,8 @@ from calculators import mission_trios_selector, cast_to_int
 from website.crud import create_mission, view_mission, delete_mission
 from website.login import get_user_id_from_token
 from fastapi import FastAPI, HTTPException, requests, Response, Request
-from website.web_db_tools import get_user_info, update_user_info, get_pros_list, get_mission_list, get_current_user
+from website.web_db_tools import get_user_info, update_user_info, get_pros_list, get_mission_list, get_missions, missions_by_categories
+
 from refresher import refresher
 from website.utilitaries import normalize_model_output
 from exceptions import IdError, RefreshingError
@@ -157,11 +158,6 @@ def update_user_info_route(body: UserUpdateRequest):
         raise HTTPException(status_code=400, detail=str(e))
 
 
-@app.post("/datas/list/pros")
-def list_pros(body: UserInfoRequest):
-    return get_pros_list(body.userId)
-
-
 @app.post("/datas/list/missions")
 def list_missions(body: UserInfoRequest):
     return get_mission_list(body.userId)
@@ -187,7 +183,24 @@ def list_pros(body: UserInfoRequest):
 
     if status is None:
         raise HTTPException(status_code=404, detail="No professionals found")
+    return status
 
+
+@app.get("/all_pro_missions_fetch")
+def pro_missions_fetch():
+    missions = get_missions()
+    if missions is None:
+        raise HTTPException(status_code=404, detail="No missions found")
+    return missions
+
+
+@app.post("/algos/missions_by_categories")
+def missions_by_categories_route(body: dict):
+    missions = missions_by_categories(body)
+    if missions is None:
+        raise HTTPException(
+            status_code=404, detail="No missions found for the given categories")
+    return missions
 # ********************************************************************************
 # MICROSERVICE AI
 
@@ -266,6 +279,8 @@ def run_with_id_list_limit_index(user_id: str, list_limit: str, trio_index: str)
 
 
 # print(run_with_id("1001"))
+# print(run_with_id("21"))
+
 
 # print(get_current_user(44))
 
