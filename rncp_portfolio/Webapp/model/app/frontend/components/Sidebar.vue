@@ -2,12 +2,18 @@
   <nav class="side-menu">
     <ul>
       <li><NuxtLink to="/account/home">Mon profil</NuxtLink></li>
+
+      <template v-if="auth.isAdmin.value === true">
       <li><NuxtLink to="/account/pros">Pros</NuxtLink></li>
       <li><NuxtLink to="/account/missions">Missions</NuxtLink></li>
+      </template>
     </ul>
   </nav>
 </template>
 
+<script setup lang="ts">
+const auth = useAuth()
+</script>
 <style scoped>
 .side-menu ul { list-style: none; padding: 0; margin: 0; }
 .side-menu li { margin: 12px 0; }

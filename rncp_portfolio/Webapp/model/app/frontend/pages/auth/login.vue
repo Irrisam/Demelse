@@ -29,39 +29,30 @@
 </template>
 
 <script setup lang="ts">
-console.log("login.vue chargé !")
-
-// definePageMeta({
-//   layout: "empty"
-// })
-
-const email = ref<string>("")
-const password = ref<string>("")
-
+const email = ref("")
+const password = ref("")
 const error = ref<string | null>(null)
 const response = ref<unknown>(null)
 
-const { request, token } = useApi()
-const { login } = useAuth()
+const { request } = useApi()
+const { login, isAdmin, token } = useAuth()
 
 const handleLogin = async () => {
   try {
     const data = await request("/auth/login", {
       method: "POST",
-      body: {
-        email: email.value,
-        password: password.value,
-      },
+      body: { email: email.value, password: password.value },
     })
 
     response.value = data
-
     const jwt = data?.access_token?.access_token
 
-    if (jwt) {
+    
+    if (jwt && typeof jwt === 'string') {
       localStorage.setItem('token', jwt)
       login(jwt)
-      await navigateTo("/account/home") // ✅ plus de blocage ici
+      console.log("Admin ?", isAdmin.value)
+      await navigateTo("/account/home")
     } else {
       error.value = "Token manquant dans la réponse."
     }
@@ -71,8 +62,8 @@ const handleLogin = async () => {
     console.error(err)
   }
 }
-
 </script>
+
 
 <style scoped>
 .login-page {

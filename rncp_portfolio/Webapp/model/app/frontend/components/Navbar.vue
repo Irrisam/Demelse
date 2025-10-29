@@ -1,5 +1,5 @@
 <script setup lang="ts">
-const { isLoggedIn } = useAuth()
+const auth = useAuth()
 </script>
 
 <template>
@@ -7,26 +7,29 @@ const { isLoggedIn } = useAuth()
     <NuxtLink to="/" class="nav-logo">Demelse</NuxtLink>
 
     <ul class="nav-links">
-      <template v-if="!isLoggedIn">
+      <template v-if="auth.isLoggedIn.value === false">
         <li><NuxtLink to="/auth/login">Se connecter</NuxtLink></li>
         <li><NuxtLink to="/auth/register">Créer un compte</NuxtLink></li>
       </template>
+      
+      <template v-if="auth.isLoggedIn.value === true"> 
+              <li><NuxtLink to="/account/home">Mon compte</NuxtLink></li>
+              <li><NuxtLink to="/auth/logout">Se déconnecter</NuxtLink></li>
+      </template>
 
-      <template v-else>
+      <template v-if="auth.isLoggedIn.value && auth.isAdmin.value === false">
+        <li><NuxtLink to="/missions/create">Créer une mission</NuxtLink></li>
+      </template>
+
+      <template v-if="auth.isAdmin.value === true && auth.isLoggedIn.value === true">
         <li><NuxtLink to="/missions/create">Créer une mission</NuxtLink></li>
         <li><NuxtLink to="/missions/view">Voir une mission</NuxtLink></li>  
-        <li><NuxtLink to="/missions/delete">Supprimer une mission</NuxtLink></li> 
-        <li><NuxtLink to="/account/home">Mon compte</NuxtLink></li>
-        <li><NuxtLink to="/auth/logout">Se déconnecter</NuxtLink></li>
+        <li><NuxtLink to="/missions/delete">Supprimer une mission</NuxtLink></li>
       </template>
+
     </ul>
   </nav>
 </template>
-
-
-<script setup lang="ts">
-
-</script>
 
 <style>
 .navbar {
