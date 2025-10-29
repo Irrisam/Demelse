@@ -2,7 +2,7 @@ from calculators import mission_trios_selector, cast_to_int
 from website.crud import create_mission, view_mission, delete_mission
 from website.login import get_user_id_from_token
 from fastapi import FastAPI, HTTPException, requests, Response, Request
-from website.db_tools import get_user_info, update_user_info, get_pros_list, get_mission_list
+from website.web_db_tools import get_user_info, update_user_info, get_pros_list, get_mission_list, get_current_user
 from refresher import refresher
 from website.utilitaries import normalize_model_output
 from exceptions import IdError, RefreshingError
@@ -181,6 +181,13 @@ def best_categories(body: ProIDRequest):
     return normalize_model_output(raw)
 
 
+@app.post("/datas/list/pros")
+def list_pros(body: UserInfoRequest):
+    status = get_pros_list(body.userId)
+
+    if status is None:
+        raise HTTPException(status_code=404, detail="No professionals found")
+
 # ********************************************************************************
 # MICROSERVICE AI
 
@@ -258,6 +265,9 @@ def run_with_id_list_limit_index(user_id: str, list_limit: str, trio_index: str)
         return {f"An error occured:: {str(e)}, {type(e)}"}
 
 
-print(run_with_id("1001"))
+# print(run_with_id("1001"))
+
+# print(get_current_user(44))
+
 
 # 'tristan', 'duchamp', 'Clementine17', 'tristanduchamp@hotmail.fr'))
