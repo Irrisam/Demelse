@@ -10,7 +10,7 @@
 
       <template v-if="auth.isAdmin.value === false">
       <li><NuxtLink to="/pros/missions">Liste des missions</NuxtLink></li>
-      <li><NuxtLink to="/pros/missions_suggested">Missions suggérées par IA</NuxtLink></li>
+      <li><NuxtLink to="/pros/missions_suggested">Mes missions IA</NuxtLink></li>
       </template>
     </ul>
   </nav>

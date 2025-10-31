@@ -16,5 +16,7 @@ import Navbar from "@/components/Navbar.vue"
   max-width: 900px;
   margin: 0 auto;
   padding: 20px;
+  min-height: 100vh;
+  background: #f1f5f9; /* 💙 ton bleu-gris clair */
 }
 </style>

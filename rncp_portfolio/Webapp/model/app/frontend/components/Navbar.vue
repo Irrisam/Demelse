@@ -17,10 +17,6 @@ const auth = useAuth()
               <li><NuxtLink to="/auth/logout">Me déconnecter</NuxtLink></li>
       </template>
 
-      <template v-if="auth.isLoggedIn.value && auth.isAdmin.value === false">
-        <li><NuxtLink to="/pros/missions">Mes missions</NuxtLink></li>
-      </template>
-
       <template v-if="auth.isAdmin.value === true && auth.isLoggedIn.value === true">
         <li><NuxtLink to="/missions/create">Créer une mission</NuxtLink></li>
         <li><NuxtLink to="/missions/view">Voir une mission</NuxtLink></li>  

@@ -15,14 +15,9 @@
 
     <p v-if="error" style="color: red;">Erreur : {{ error }}</p>
 
-    <h2>Réponse brute du backend :</h2>
-    <pre>{{ response }}</pre>
-
-    <h2>Token stocké :</h2>
-    <pre>{{ token ? token.value : "Aucun token" }}</pre>
     <nuxt-link to="/auth/register">
 
-      Pas encore de compte ? Enregistre toi bro
+      Pas encore de compte ? En créer un ici !
     </nuxt-link>
 
   </div>
