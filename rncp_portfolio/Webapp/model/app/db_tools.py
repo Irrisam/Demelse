@@ -254,15 +254,6 @@ def db_user_fetcher(user_id, data_type):
             ms.user_id;
         """
              },
-            {'MISSION_LOCATOR': """
-            SELECT
-                *
-            FROM
-                medelse.announcement
-            WHERE
-
-        """
-             },
         ]
         cursor = connect.cursor(cursor_factory=RealDictCursor)
         sql_query = sql_queries[idx][data_type].format(user_id=user_id)

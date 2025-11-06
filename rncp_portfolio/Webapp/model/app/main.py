@@ -13,6 +13,8 @@ from website.login import login
 from pydantic import BaseModel
 from fastapi.middleware.cors import CORSMiddleware
 
+import json
+
 # uvicorn main:app --reload --port 8000
 
 app = FastAPI()
@@ -24,10 +26,6 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-
-# --------------------------
-# MODELS
-# --------------------------
 
 
 class LoginRequest(BaseModel):
@@ -218,24 +216,41 @@ def refresh():
 
 @app.get("/{user_id}")
 def run_with_id(user_id: str):
+    print(
+        '\nRoute used for demonstration: @app.get("/{user_id}"), run_with_id(), default route returning 30 trios\n')
     # outputs 30 best trios from users suggestions
     if not user_id.isdigit():
-        return {"Please input a valid numeric user_id"}
+        return {"error": "Please input a valid numeric user_id"}
+
     try:
-        selected_trio, full_trios = mission_trios_selector(
-            int(user_id), 30, 0, dominant_category_check=False)
+        print('Generating trios for user_id:', user_id)
+        print('\n')
+        _, full_trios = mission_trios_selector(
+            int(user_id), 30, 0, dominant_category_check=False
+        )
         full_trios = cast_to_int(full_trios)
+
+        with open("results.json", "w", encoding="utf-8") as f:
+            json.dump(full_trios, f, ensure_ascii=False, indent=4)
+
         return full_trios
+
     except ResourceNotFound:
-        return {"Training datas not found, please run the refresher first"}
+        error_msg = {
+            "error": "Training datas not found, please run the refresher first"}
     except IdError as e:
-        return {str(e)}
+        error_msg = {"error": str(e)}
     except IndexError:
-        return {"ID not found for user_id(1):": str(user_id)}
+        error_msg = {"error": f"ID not found for user_id(1): {user_id}"}
     except TypeError:
-        return {"ID not found for user_id:(2)": str(user_id)}
+        error_msg = {"error": f"ID not found for user_id(2): {user_id}"}
     except Exception as e:
-        return {f"An error occured:: {str(e)}, {type(e)}"}
+        error_msg = {"error": f"An error occurred: {str(e)}, {type(e)}"}
+
+    with open("results.json", "w", encoding="utf-8") as f:
+        json.dump(error_msg, f, ensure_ascii=False, indent=4)
+
+    return error_msg
 
 
 @app.get("/{user_id}/{list_limit}")
@@ -273,16 +288,9 @@ def run_with_id_list_limit_index(user_id: str, list_limit: str, trio_index: str)
     except IndexError:
         return {"ID not found for user_id(1):": str(user_id)}
     except TypeError:
-        return {"ID not found for user_id(2):": str(user_id), 'with error:': str(e)}
+        return {"ID not found for user_id(2):": str(user_id)}
     except Exception as e:
         return {f"An error occured:: {str(e)}, {type(e)}"}
 
 
-# print(run_with_id("1001"))
-# print(run_with_id("21"))
-
-
-# print(get_current_user(44))
-
-
-# 'tristan', 'duchamp', 'Clementine17', 'tristanduchamp@hotmail.fr'))
+print(run_with_id("22"))

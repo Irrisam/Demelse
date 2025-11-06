@@ -1,1 +1,8 @@
 rncp_portfolio/Webapp/model/app/trained_models/*.joblib
+rncp_portfolio/Webapp/model/app/trained_models/*.pkl
+rncp_portfolio/Webapp/model/app/__pycache__/
+rncp_portfolio/Webapp/model/app/frontend/node_modules/
+rncp_portfolio/Webapp/model/app/frontend/dist/
+rncp_portfolio/Webapp/model/app/frontend/.env
+rncp_portfolio/Webapp/model/app/frontend/.vite/
+rncp_portfolio/Webapp/model/app/frontend/vite.config.js

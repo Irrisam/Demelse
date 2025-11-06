@@ -30,7 +30,6 @@ def value_getter(user_id, data_type='full', dominant_category_check=False):
                 elif data_categories[recommendation_type][1] == 'USER':
                     dominant_recommendation_scores['user_score'] += score
             score_values.append(recommended_results)
-
     aggregated_scores = {}
     for reco_list in score_values:
         for item_name, score in reco_list:
@@ -59,6 +58,9 @@ def generate_top_combinations(user_id, result_limit=50, dominant_category_check=
     etab_scores = results['ETAB']
     service_scores = results['SERVICE']
     rythme_scores = results['RYTHME']
+    print('\nRaw scores fetched: ETAB({}) \n\n SERVICE({})\n\n RYTHME({})\n\n'.format(
+        etab_scores, service_scores, rythme_scores))
+    print('\n')
 
     all_combinations = product(etab_scores, service_scores, rythme_scores)
     combination_scores = []
@@ -87,8 +89,12 @@ def generate_top_combinations(user_id, result_limit=50, dominant_category_check=
 def mission_trios_selector(user_id, result_limit, trio_index, dominant_category_check=False):
     # selects the {trio_index} trio of missions and returns the category names in a list
     try:
+
         returned_score_trios, full_trios = generate_top_combinations(
             user_id, result_limit, dominant_category_check)
+        print('Total trios generated for user_id {}: {}'.format(
+            user_id, len(full_trios)))
+        print('\n')
         selected_score_trios = returned_score_trios[trio_index]
         selected_trio = []
         for index in range(len(selected_score_trios[0])):
